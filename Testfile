@@ -1,0 +1,52 @@
+Recourse Operations Database — Quick Reference Guide & KT Cheatsheet
+1. Application At-a-Glance
+Property	Details
+Application Name	Recourse Operations Database
+Framework	Oracle Application Express (APEX) / ORDS
+Application ID	606
+Primary URL	http://usl20107222.us.hsbc:20000/ords/f?p=606:...
+Business Units Supported	Consumer Lending, Decision One, HMC, HMS, Solstice, MC
+Critical Warning	Do NOT use the browser's back button; use on-screen APEX buttons
+2. Global Navigation & Page Map
+Menu Tab	Page ID(s)	Primary Purpose / Sub-Screens
+Home	1	Landing portal & module index
+Repurchase Defense	2, 20, 21	Loan search, defense creation, requestor tracking, loan detail
+MI Review	300, 310, 320	MI search, Add Requestor form, LOAN_DETAIL form & user exceptions
+File Request	420, 421, 422	Batch details list (4,500+ batches), batch updates, Excel account paste box
+Reporting	--	Operational metrics, pipeline reporting, audit export
+QC Worksheet	701 - 705	5 Sub-Tabs: Review Info, Citings, Loan Info, Qualifying Info, Collateral & Asset Info
+Target QC	801 - 803	3 Sub-Tabs: Review Info (Fraud/EPD), Asset & Income, Citings
+QC Compliance	900, 902	Compliance search grid, HMDA/GMI auditing, LAR denial reasons
+Administration	8, 322, 500, 502	Investor Details History, Recourse Operations History, Manage Users, Manage Drop Down Lists
+3. Sub-Tab & Screen Field Checklist
+QC Worksheet (701–705)
+Review Info (701): Received Date, Review Status, Field Review Status, QC Processor, Review Status Date, Infile Credit Order Type, QC Underwriter, High Risk Review? (Checkbox), Infile Credit Review Date, QC Reviewing Manager, HVCC Compliant (Dropdown), QC Closer, Checklists (LP/DU, FHA, VA), Manager Comments, Letters Sent (1-14 Dropdowns), Review & Final Comments.
+Citings (702): 10 Citing rows (Citing Code, Description, Comments up to 750 chars, Severity Level, PHH Resolved?, PHH Exempt?) + 2 Info Code rows.
+Loan Info (703): Borrower & Property info, Contract Sales Price, Property Rights, Owner Occupied?, Appraised Value, Mortgage info, Program, Lien Position (*3 = HELOC), Cashout?, HELOC?, Original Loan Amount.
+Qualifying Info (704): Employment verified checkboxes (Borrowers 1-3, Co-Borrowers 1-3), Operations vs. QC Monthly Income matrix, Operations vs. QC Monthly Debt/Housing matrix, Front-End & Back-End DTI Ratios, Calculate button.
+Collateral & Asset Info (705): Ops personnel (Underwriter, Closer, Processor, Funder, Loan Officer, Contract Co, VIP Type), Appraiser Licensing & HUD/Freddie Ineligibility checkboxes, FICO Scores, Source of Funds (SOF 1-5), Earnest Money, Required to Close, Reserves, POC, Calculate button, Underwriting Comments.
+Target QC (801–803)
+Review Info (801): Received Date, Response Received?, Review Type, Issue Resolved?, Further Action Required?, Target Underwriter, Referral Dept, Fraud Type, Referral Employee, Underwriting Issue, Referral Reason, EPD Delinquency Comments.
+Asset & Income (802): SOF 1-5, Earnest Money, Cash Reserves, Operations vs. QC Income and Payments recalculation.
+Citings (803): 10 Citing rows with IQR? (Independent Quality Review) checkbox, Severity classification (Significant, Moderate, Minor).
+QC Compliance (900, 902)
+Search Grid (900): Filters by App #, Loan #, Borrower, Review Type, Received/Status Dates, Auditor.
+Review Form (902): Borrower & Co-Borrower (1-3), GMI Data (HMDA race, ethnicity, sex, collection method), Pre-Approved?, Second Lien?, Ops team, LAR Denial Reason 1, 2, 3 dropdowns, Review Comments.
+Administration & Audit History (8, 322, 502)
+Investor Details History (8): Search by Investor Code/Name/User. Displays full contact info, Load Date, Update Date, Update User, Action Code (I/U/D).
+Recourse Operations History (322/502): Interactive audit logging for Repurchase Defense, MI Review, QC Worksheet, Target QC, and QC Compliance. Records microsecond update timestamps and user IDs.
+4. Key Calculation Formulas
+
+1. Total Monthly Verified Income = Sum(Borrower 1..3) + Sum(Co-Borrower 1..3) + Other Income
+2. Housing Expense (Front)       = 1st P&I + 2nd P&I + Hazard + Taxes + MI + HOA + Lease + Other
+3. Total Obligations (Back)      = Housing Expense + Neg Cash Flow + Other Debt Payments
+4. Front DTI %                   = (Housing Expense / Total Monthly Income) * 100
+5. Back DTI %                    = (Total Obligations / Total Monthly Income) * 100
+6. Total Source of Funds         = SOF 1 + SOF 2 + SOF 3 + SOF 4 + SOF 5
+7. Net Borrower Funds Paid       = Earnest Money + Required to Close + Cash Reserves + POC
+5. KT Session Handover Talking Points
+System Architecture: Oracle APEX application with direct integration into master mortgage servicing databases. Warn trainees about session state preservation (no browser back button).
+Batch Processing: Walk through how physical file requests are batched using the Excel paste feature in File Request > Add Account Numbers to this Batch.
+QC Dual-Audit Workflow: Emphasize how Qualifying Info and Collateral & Asset Info recalculate Front/Back DTIs to catch underwriting defects.
+Target QC & High-Risk Loans: Show how fraud investigations and early payment defaults (EPD) are tracked and cited under Target QC.
+Auditing & Governance: Explain how every single edit is tracked in Administration > Recourse Operations History with employee ID and microsecond timestamp for regulatory compliance.
