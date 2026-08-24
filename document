@@ -1,0 +1,434 @@
+Recourse Operations Database (Mortgage Recourse & Quality Control System)
+Comprehensive Product Functional Specification & Knowledge Transfer (KT) Document
+Document Information
+Application Name: Recourse Operations Database
+Platform Architecture: Oracle Application Express (APEX) / Oracle REST Data Services (ORDS)
+Primary Hosting Environment: Enterprise Intranet (usl20107222.us.hsbc:20000/ords/f?p=606)
+Application ID: 606
+Target Audience: Business Analysts, Product Managers, Operations Specialists, Software Engineers, QA Testers, and System Administrators
+Document Purpose: Product Reference Specification & Operational Knowledge Transfer (KT) Handover
+1. Executive Summary & Application Overview
+1.1 Purpose and Scope
+The Recourse Operations Database is an enterprise-grade web application built to manage the end-to-end lifecycle of mortgage recourse operations, mortgage insurance (MI) claims and reviews, repurchase defense workflows, batch file requests, and comprehensive multi-tier Quality Control (QC) compliance auditing.
+
+The system serves as a central repository and operational processing engine connecting multiple lending business units, servicing portfolios, and external mortgage investors/agencies (e.g., Fannie Mae, Freddie Mac, FHA, VA, Private Investors).
+
+Mermaid diagram
+1.2 Core Supported Business Units
+The application accommodates multi-entity loan portfolios across the following business units:
+
+Consumer Lending (CL)
+Decision One (D1 / DO)
+HMC (Household Mortgage Corporation / HSBC Mortgage Corp)
+HMS (Household Mortgage Services / HSBC Mortgage Services)
+Solstice
+Mortgage Corporation (MC)
+2. System Architecture & UI Conventions
+2.1 Navigation Structure
+The top navigation bar provides global access across all functional modules:
+
+Home: Primary launchpad and system notice portal.
+Repurchase Defense: Defense creation, loan searching, request details, and investor tracking.
+MI Review: Mortgage insurance claim review, requestor directories, and loan exception editing.
+File Request: Bulk account number batch file requests, batch management, and status tracking.
+Reporting: Operational, QC, and management reporting.
+QC Worksheet: Full-underwriting quality control reviews across 5 operational sub-tabs.
+Target QC: High-risk, fraud, and referral underwriting quality control reviews across 3 sub-tabs.
+QC Compliance: Regulatory compliance, HMDA/GMI auditing, and secondary quality reviews.
+Administration: User access control, investor directories, dropdown configuration, and audit trails.
+Session Controls: Logout / Password Reset.
+2.2 Global System Warnings & Operational Constraints
+Browser Navigation Warning: An alert banner is present across all forms:
+WARNING: Please do not use Back button in the Internet Explorer menu. Users must exclusively utilize on-screen navigation buttons (GoBack, Go Home, Go Back to Loan Search, Reset, Submit) to prevent APEX session state corruption.
+
+System Date & Timestamp Formatting: Dates follow standard enterprise Oracle conventions (e.g., DD-MON-YY, MM/DD/YYYY HH24:MI:SS.FF6 AM/PM).
+Audit Logging: Every create, edit, and delete action automatically logs the Update User (Employee ID), Load Date, Update Date, and Action Code (I for Insert, U for Update, D for Delete).
+3. Module Specifications & Functional Deep-Dive
+3.1 Module 1: Home Dashboard & System Portal
+Page ID: 606:1
+Purpose: Serves as the landing hub categorizing functional modules and administrative utilities.
+UI Structure:
+Recourse Operations Sub-Modules:
+Repurchase Defense
+MI Review
+File Request
+Reporting
+QC Worksheet
+Target QC
+QC Compliance
+Password Reset
+Administration Menu:
+Manage Users
+Investor Details History
+Recourse Operations History
+Requestor Details History
+Manage Drop Down List
+3.2 Module 2: Repurchase Defense
+Primary Search Page ID: 606:2 / 606:21
+Form Page ID: 606:20 (Create Defense / Loan Detail)
+Purpose: Enables recourse operators to track, challenge, and defend against loan repurchase demands received from investors, GSEs, or secondary market purchasers.
+Mermaid diagram
+3.2.1 Loan Search Filter Bar
+Search Field Label	Control Type	Description / Data Type
+Loan Number	Text Input	Target mortgage account number
+Business Unit	Dropdown	Consumer Lending, Decision One, HMC, HMS, Solstice, MC
+Requestor Name	Dropdown / Text	Name of the investor/requesting agency
+Recourse Operator	Dropdown	Assigned internal recourse analyst
+Borrower Name	Text Input	Full or partial primary borrower name
+Subject Address	Text Input	Collateral property street address
+Request Date From	Date Picker (MM/DD/YYYY)	Lower boundary of request date
+Request Date To	Date Picker (MM/DD/YYYY)	Upper boundary of request date
+Status	Dropdown	Defense status (e.g., Open, Pending Review, Defended, Repurchased, Resolved)
+3.2.2 Search Results Grid & Actions
+Grid Action Buttons: Edit, Delete, Print, Export to Excel/CSV.
+Top Command Buttons: Create Repurchase Defense, Create Loan Detail, Reset, Go.
+Displayed Columns: Loan Number, Business Unit, Borrower Name, Subject Address, Investor Name, Request Date, Defense Status, Assigned Operator, Last Updated Date.
+3.3 Module 3: Mortgage Insurance (MI) Review
+Search Page ID: 606:300 / 606:301
+Requestor Form Page ID: 606:310 (Add Requestor)
+Loan Detail Form Page ID: 606:320 (LOAN_DETAIL / LOAN DETAIL USER EXCEPTION)
+Purpose: Manages interactions with Mortgage Insurance companies (Genworth, Radian, MGIC, Essent, Arch, etc.) regarding MI cancellation, rescission notices, rebuttal defenses, and claim reviews.
+3.3.1 MI Requestor Management (Add Requestor Screen)
+Captures official contact information for insurance carriers and counter-parties:
+
+Business Unit: Dropdown selection.
+Requestor Name: Official company name (e.g., Radian Guaranty, Genworth Financial).
+Contact Name: Primary claims representative.
+Contact Email: Direct email address for correspondence.
+Contact Phone Number: Direct dial extension.
+General Phone Number: Corporate switchboard.
+Contact Fax Number: Facsimile number for claim transmissions.
+Address Line 1 & 2: Corporate postal address.
+City, State, Zip: Geographic mailing information.
+3.3.2 Master Loan Detail & User Exception Management (Form on LOAN_DETAIL)
+Provides an exhaustive 3-column operational layout across ~54 core mortgage data attributes:
+
+
++----------------------------------------------------------------------------------------------------+
+|                                    FORM ON LOAN_DETAIL                                             |
++---------------------------------+----------------------------------+-------------------------------+
+|  1. IDENTIFICATION & BORROWER   |  2. PROPERTY & APPRAISAL         |  3. UNDERWRITING & FINANCIALS |
+|  - Business Unit                |  - Subject Address 1 & 2         |  - Application Date           |
+|  - Loan Number / App Number     |  - Subject City, State, Zip      |  - Note Date / Closing Date   |
+|  - Source System Code           |  - Subject County                |  - Funding Date               |
+|  - Primary Borrower Full Name   |  - Property Type (SFH, Condo,..) |  - First Due Date             |
+|  - Primary Borrower SSN         |  - Property Rights (Fee Simple)  |  - Original Loan Amount       |
+|  - Co-Borrower Name & SSN       |  - Number of Units               |  - Note Interest Rate         |
+|  - Borrower 2 & 3 Names         |  - Contract Sales Price          |  - Amortization Type (Fixed)  |
+|  - Co-Borrower 2 & 3 Names      |  - Appraised Value               |  - Lien Position (1st / 2nd)  |
+|  - Employer Information         |  - Appraiser Name & License      |  - LTV & CLTV Ratios          |
+|  - Borrower Monthly Income      |  - Appraisal Date                |  - Loan Purpose (Purchase/..) |
+|  - Total Monthly Obligations    |  - Occupancy Type (Owner/Inv)    |  - Investor Code & Name       |
++---------------------------------+----------------------------------+-------------------------------+
+3.4 Module 4: File Request & Batch Processing
+Batch Grid Page ID: 606:420 (File Request Batch Details)
+Batch Add/Edit Page ID: 606:421 (Batch Level Update)
+Account Number Import Page ID: 606:422 (Add Account Numbers to this Batch)
+Purpose: Facilitates high-volume automated and manual file retrieval requests from physical document custodians (e.g., Iron Mountain) or digital image archives.
+Mermaid diagram
+3.4.1 File Request Batch Details Grid
+Search Filters:
+Batch Number: Unique batch sequence ID.
+Batch Status: Dropdown (New, Submitted, In Progress, Fulfilled, Partial, Cancelled).
+Requestor Type: Dropdown (Internal QC, Legal, Servicing, External Investor).
+Batch Created By: Dropdown / User ID.
+Requestor Name: Specific individual or entity requesting files.
+Summary Metrics: High-volume pagination supporting 4,500+ active batches (e.g., Rows 1 - 15 of 4467).
+Interactive Report Columns: Batch Number, Requestor Type, Requestor Name, Batch Status, Total Accounts, Created Date, Created By, Actions.
+3.4.2 Excel Bulk Import (Add Account Numbers to this Batch)
+Multi-Account Paste Box: Large textarea accepting newline-delimited or tab-delimited account numbers copied directly from Microsoft Excel spreadsheets.
+Import Validation: Validates account number presence against master loan records and returns row-by-row batch assignment confirmation.
+3.5 Module 5: Quality Control (QC) Worksheet
+Main Review Page ID: 606:701
+Citings Page ID: 606:702
+Loan Info Page ID: 606:703
+Qualifying Info Page ID: 606:704
+Collateral & Asset Info Page ID: 606:705
+Purpose: The core underwriting audit engine for post-closing and pre-funding quality control. Evaluates credit, capacity, collateral, and compliance integrity across 5 operational sub-tabs.
+5.5.1 Header Summary & Global Actions
+Displayed persistently across all 5 sub-tabs:
+
+Application Number: E.g., 1577511570
+PHH Account Number: Servicing portfolio ID.
+HSBC Loan Number: Internal master loan identifier.
+Borrower Name: Primary borrower name.
+Action Buttons: Print, Go Back to Loan Search, Submit.
+5.5.2 Sub-Tab 1: Review Info
+Captures reviewer assignments, audit statuses, underwriting flags, sent letters, and manager review comments:
+
+Review Information Fields:
+Received Date: Audit intake date.
+Review Status: Dropdown (Open, In Review, Pending Docs, Completed, Rebuttal).
+Field Review Status: Dropdown for appraisal field review tracking.
+QC Processor: Assigned QC operations specialist.
+Review Status Date: Date of last status change.
+Infile Credit Order Type: Credit re-verification order type.
+QC Underwriter: Assigned senior QC underwriter.
+High Risk Review?: Checkbox flag for escalated scrutiny.
+Infile Credit Review Date: Completion date of credit re-pull review.
+QC Reviewing Manager: Supervisory sign-off manager.
+HVCC Compliant: Dropdown (Yes, No, Exempt for Home Valuation Code of Conduct).
+QC Closer: Assigned closing QC auditor.
+Checklists Complete: LP/DU Checklist Complete?, FHA Checklist Complete?, VA Checklist Complete? (Checkboxes).
+Manager Comments: Dedicated multi-line narrative box.
+Review Results - Letters Sent: 14 individual dropdown selectors (Letter 1 through Letter 14) for tracking borrower/lender audit notification letters.
+Review Comments: Review Comment and Final Comment rich multiline text areas.
+5.5.3 Sub-Tab 2: Citings
+Manages underwriting defects, audit exceptions, guideline violations, and severity tracking:
+
+QC Citings Matrix (10 Dynamic Rows):
+Citing Code: Dropdown of standardized defect codes (e.g., 2G10 - GUIDELINE DOC MSG, 3D75 - APPRAISAL INCOMPLETE, 3A99 - CREDIT DOCUMENTS MISSING).
+Citing Description: Auto-populated or manual defect description.
+Citing Comments: Extended text entry (up to 750 characters per citing).
+Citing Severity Level: Severity classification (Critical / Significant, Moderate, Minor, Informational).
+PHH Resolved?: Checkbox flag indicating defect resolution.
+PHH Exempt?: Checkbox flag indicating management exemption.
+QC Info Codes Matrix (2 Dynamic Rows):
+Info Code: Dropdown (e.g., Q001 - QC - OTHER, 445 - FIELD REVIEW ORDERED).
+Description: Auto-populated information summary.
+Comments: Informational text area (up to 500 characters).
+5.5.4 Sub-Tab 3: Loan Info
+Borrower and Property Information:
+Borrower Name, Borrower SSN, Subject Address 1 & 2, Subject City, Subject State, Subject Zip Code, Subject County.
+Property Type, Unit, Contract Sales Price, Property Rights (Dropdown), Owner Occupied?, Appraised Value.
+Borrower Info Action Button & Multiline Property Comments.
+Mortgage Information:
+Application Date, Loan Purpose, LQ Loan Program, Note Date, Doc Type Desc, Loan Type.
+Funding Date, Amortization Type, Lien Position Code (3 indicates HELOC), Original Loan Amount.
+Investor Name, Investor Code, Next Due Date, HELOC? (Checkbox), Cashout? (Dropdown).
+Multiline Mortgage Comments.
+5.5.5 Sub-Tab 4: Qualifying Info (Income & Payment Recalculation Engine)
+Provides dual-column side-by-side comparison between Operations Underwriting and QC Audit Recalculation:
+
+
++----------------------------------------------------------------------------------------------------+
+|                                    QUALIFYING INFO MATRIX                                          |
++-----------------------------------------+----------------------------+-----------------------------+
+| PARAMETER / OBLIGATION                  | OPERATIONS VALUE ($)       | QC AUDIT VALUE ($)          |
++-----------------------------------------+----------------------------+-----------------------------+
+| Borrower 1-3 Monthly Income             | [ Operations Income      ] | [ QC Verified Income      ] |
+| Co-Borrower 1-3 Monthly Income          | [ Operations Income      ] | [ QC Verified Income      ] |
+| Other Monthly Income                    | [ Operations Other       ] | [ QC Verified Other       ] |
+| TOTAL MONTHLY INCOME                    | [ Auto Sum Total         ] | [ Auto Sum Total          ] |
++-----------------------------------------+----------------------------+-----------------------------+
+| First Mortgage P&I                      | [ P&I Value              ] | [ QC P&I Recalculation    ] |
+| Second Mortgage P&I                     | [ P&I Value              ] | [ QC P&I Recalculation    ] |
+| Hazard Insurance                        | [ Hazard Premium         ] | [ QC Hazard Verification  ] |
+| Real Estate Taxes                       | [ Tax Escrow Amount      ] | [ QC Tax Verification     ] |
+| Mortgage Insurance (MI)                 | [ MI Monthly             ] | [ QC MI Verification      ] |
+| Homeowner Assessments (HOA)             | [ HOA Dues               ] | [ QC HOA Verification     ] |
+| Lease / Ground Rent                     | [ Lease Rent             ] | [ QC Lease Verification   ] |
+| Negative Cash Flow                      | [ Neg Cash Flow          ] | [ QC Neg Cash Flow        ] |
+| All Other Monthly Payments              | [ Installment/Revolving  ] | [ QC Credit Report Pull   ] |
+| TOTAL MONTHLY PAYMENTS                  | [ Auto Sum Payments      ] | [ Auto Sum Payments       ] |
++-----------------------------------------+----------------------------+-----------------------------+
+| QUALIFYING RATIOS:                      |                            |                             |
+| - Primary Housing Expense (Front DTI)  | [ Front Ratio %          ] | [ QC Front Ratio %        ] |
+| - Total Obligations (Back DTI)          | [ Back Ratio %           ] | [ QC Back Ratio %         ] |
++-----------------------------------------+----------------------------+-----------------------------+
+Employment Verification: Six individual verification checkboxes (Borrower 1, Borrower 2, Borrower 3, Co-Borrower 1, Co-Borrower 2, Co-Borrower 3).
+Interactive Calculation Engine: Calculate button recomputes total income, total debt payments, Front-End DTI, and Back-End DTI dynamically.
+5.5.6 Sub-Tab 5: Collateral & Asset Info
+Originating Operations Personnel:
+Loan Underwriter, Loan Closer, Loan Processor, Loan Funder, Loan Officer (Dropdown), Contract Company (Dropdown), VIP Type (Dropdown: --, Yes, No).
+Appraisal Review & Eligibility Integrity:
+Appraisal Company, Inspecting Appraiser, Review Appraiser.
+Eligibility Checkboxes: Approved? (for all 3), HUD Ineligible? (for all 3), Freddie Ineligible? (for all 3).
+Appraiser Licensing: Appraiser Licensed?, Review Appraiser Licensed? (Checkboxes).
+Appraisal Exception: Dropdown (Yes, No).
+Collateral & Asset Information - FICO Scores: Tri-merge credit score tracking across all borrowers.
+Source of Funds (SOF 1 to SOF 5 Breakdown):
+SOF 1 through SOF 5: Individual Amount and Description text boxes.
+Total Source of Funds: Sum of verified asset sources.
+Earnest Money / Down Pmt: Verified deposit amount.
+Required to Close: Total cash required from borrower.
+Cash Reserves: Post-closing liquid reserve funds.
+Paid Outside of Closing (POC): Pre-closing paid fees.
+Total Funds Paid: Net verified cash contribution.
+Calculate Button & Extended Underwriting Comments text area.
+3.6 Module 6: Target QC
+Page IDs: 606:801 (Review Info), 606:802 (Asset & Income), 606:803 (Citings)
+Purpose: Specialized investigative Quality Control module focused on targeted defect reviews, Early Payment Default (EPD) delinquencies, fraud investigations, and departmental referrals.
+Mermaid diagram
+3.6.1 Sub-Tab 1: Review Info
+Target QC Review Metadata:
+Received Date, Review Status, Response Received? (Dropdown: Yes, No), Review Type, Review Status Date, Issue Resolved? (Dropdown: Yes, No), Review Period, Further Action Required? (Dropdown: Yes, No), Target QC Underwriter, Credit Decision, Loan Status.
+Investigation Referral Details: Referral Department, Fraud Type, Referral Employee, Underwriting Issue, Referral Reason.
+Borrower, Property & Mortgage Information: Mirror of primary loan data including Occupancy Verified? (Dropdown) and Occupancy Comments.
+EPD Delinquency Comments: Dedicated multiline text area for analyzing root causes of early mortgage defaults.
+Operations & Asset Information: Loan Underwriter, Loan Closer, Loan Processor, Loan Funder.
+3.6.2 Sub-Tab 2: Asset & Income
+Mirror layout of the Qualifying Info and Source of Funds matrix from the QC Worksheet, allowing specialized investigative recalculation of asset validity, income inflation, or omitted liabilities.
+3.6.3 Sub-Tab 3: Citings
+QC Citings Grid (10 Rows): Citing Code, Citing Description, Citing Comments, IQR? (Independent Quality Review checkbox), Citing Severity Level (Significant, Moderate, Minor).
+QC Info Codes Grid (2 Rows): Info Code, Description, Comments.
+3.7 Module 7: QC Compliance
+Search Page ID: 606:900 (QC Compliance Loan Search)
+Review Page ID: 606:902 (QC Compliance Form)
+Purpose: Audits compliance with federal and state lending regulations, Home Mortgage Disclosure Act (HMDA) Government Monitoring Information (GMI), Loan Application Register (LAR) denial reasons, and fair lending statutes.
+3.7.1 QC Compliance Search Grid
+Search Filters: Application Number, Loan Number, Borrower Name, Review Type, Received Date From/To, Status, Status Date From/To, Subject Address, Subject City, Subject State, QC Auditor.
+Top Command Buttons: Go Home, Create QC Compliance, Reset, Create Loan Detail, Go.
+Columns: Print, Edit, Delete, Application Number, Loan Number, Business Unit, Borrower Name, Received Date, Status, Review Type, Status Date, Subject Address, Subject City, Subject State, QC Secondary Reviewer, QC Auditor.
+3.7.2 QC Compliance Form Details
+Review Information: Received Date, Review Status, Loan Status, Review Type, Review Status Date, QC Auditor, QC Second Reviewer.
+Borrower & Multi-Co-Borrower Section: Primary Borrower Name, Borrower2 Name, Borrower3 Name, Co-Borrower Name, Co-Borrower2 Name, Co-Borrower3 Name, full property location, property rights, occupancy, and appraisal valuation.
+GMI Data (HMDA Regulatory Information):
+Checkbox: "I do not wish to furnish this information"
+Demographic breakdown: Ethnicity, Race, Sex.
+Radio Selection: "This information was provided: (Face-to-face / Mail / Telephone / Internet)".
+Mortgage & Regulatory Details: Live Loan Date, Product Type, First Due Date, Pre-Approved? (Checkbox), LTV, CLTV, Second Lien? (Dropdown), Second Lien Amount.
+Ops & Asset Information (LAR Reporting):
+Loan Officer (Dropdown), Team (Dropdown), Loan Processor, Loan Underwriter, Loan Closer, Loan Funder, Authorised Approver, VIP Type.
+LAR Denial Reason 1: Dropdown of HMDA denial reasons (e.g., Debt-to-income ratio, Employment history, Credit history, Collateral).
+LAR Denial Reason 2: Dropdown secondary denial reason.
+LAR Denial Reason 3: Dropdown tertiary denial reason.
+Review Comments: Full narrative compliance audit findings and bottom Submit button.
+3.8 Module 8: Administration & Historical Audit Trails
+Purpose: System governance, reference table administration, and immutable audit logging.
+Mermaid diagram
+3.8.1 Investor Details History (Page 606:8)
+Tracks historical changes made to investor corporate profiles and contact information:
+
+Filters: Investor Code, Investor Name, Update User (Dropdown) + Go, Reset, GoBack.
+Interactive Grid Columns: Business Unit, Investor Code (Sortable), Investor Name, Contact Name, Contact Phone Number, Contact Email, General Phone Number, Address 1 & 2, City, State, Zip, Contact Fax Number, Load Date, Action Code (I/U/D), Update Date, Update User (Employee ID).
+3.8.2 Recourse Operations History (Page 606:322 & 606:502)
+Interactive menu routing to deep historical audit logs across all operational domains:
+
+Sub-History Logs:
+Repurchase Defense History
+MI Review History
+QC Worksheet History
+Target QC History
+QC Compliance History
+Audit Grid Columns: Bus Unit, Application Number, Loan Number, Borrower Name, Borrower SSN, QC Underwriter, Received Date, Review Status, Review Status Date, Subject Address 1 & 2, Subject City, County, State, Note Date, Original Loan Amount, Update Date (Timestamp with microsecond precision), Update User, Action Code (Insert, Update, Delete).
+3.8.3 Manage Users & Manage Drop Down List (Page 606:500)
+Manage Users: Role-based access control (RBAC), operator permissions, and supervisor provisioning.
+Manage Drop Down Lists: Dynamic maintenance of lookup values across the application (Denial reasons, citing codes, review statuses, letter templates, investor codes, and loan programs).
+4. Business Rules, Calculations & Data Validations
+4.1 Debt-to-Income (DTI) Recalculation Engine
+Total Monthly Verified Income: 
+Total Income
+=
+∑
+(
+Borrower 1..3 Income
+)
++
+∑
+(
+Co-Borrower 1..3 Income
+)
++
+Other Income
+Total Income=∑(Borrower 1..3 Income)+∑(Co-Borrower 1..3 Income)+Other Income
+Primary Housing Expense: 
+Housing Expense
+=
+1st Mtg P&I
++
+2nd Mtg P&I
++
+Hazard Ins
++
+Taxes
++
+MI
++
+HOA
++
+Ground Rent
++
+Other
+Housing Expense=1st Mtg P&I+2nd Mtg P&I+Hazard Ins+Taxes+MI+HOA+Ground Rent+Other
+Total Monthly Obligations: 
+Total Obligations
+=
+Housing Expense
++
+Neg Cash Flow
++
+All Other Monthly Payments
+Total Obligations=Housing Expense+Neg Cash Flow+All Other Monthly Payments
+Front-End Ratio (Housing DTI): 
+Front DTI %
+=
+(
+Housing Expense
+Total Income
+)
+×
+100
+Front DTI %=( 
+Total Income
+Housing Expense
+​
+ )×100
+Back-End Ratio (Total DTI): 
+Back DTI %
+=
+(
+Total Obligations
+Total Income
+)
+×
+100
+Back DTI %=( 
+Total Income
+Total Obligations
+​
+ )×100
+4.2 Asset & Source of Funds Verification
+Total Source of Funds (SOF): 
+Total SOF
+=
+∑
+i
+=
+1
+5
+SOF Amount
+i
+Total SOF=∑ 
+i=1
+5
+​
+ SOF Amount 
+i
+​
+ 
+Net Borrower Cash Contribution: 
+Total Funds Paid
+=
+Earnest Money
++
+Required to Close
++
+Cash Reserves
++
+POC
+Total Funds Paid=Earnest Money+Required to Close+Cash Reserves+POC
+Validation Rule: Total verified SOF must equal or exceed the total Required to Close + Cash Reserves.
+4.3 Lien Position & Special Loan Indicators
+Lien Position Code *3: Indicates a HELOC (Home Equity Line of Credit) or subordinated second mortgage requiring specific Second Lien Amount, Cashout?, and CLTV validation.
+5. Operational Workflows & User Guides
+5.1 End-to-End Repurchase Defense Lifecycle
+Claim Intake: Operator searches for the target loan in Repurchase Defense > Loan Search or creates a new defense record via Create Repurchase Defense.
+Data Enrichment: Master loan attributes automatically populate from LOAN_DETAIL. Operator verifies investor demand criteria against note terms and closing packages.
+Rebuttal Formulation: Operator enters defense arguments, cites compensating factors, attaches rebuttals, updates Defense Status, and saves the record.
+Audit Sign-off: Supervisory manager reviews defense package and authorizes transmission to the investor.
+5.2 End-to-End QC Worksheet Audit Lifecycle
+Assignment: QC Processor receives file and assigns file to a QC Underwriter on Review Info.
+Credit & Capacity Re-Verification: Underwriter audits borrower income and liabilities in Qualifying Info, verifies employment checkboxes, and clicks Calculate to compare Operations DTI vs QC DTI.
+Collateral & Asset Re-Underwriting: Underwriter inspects appraiser licensing, HUD/Freddie eligibility, and asset deposits on Collateral & Asset Info.
+Exception Citing: If guidelines are breached, underwriter enters defects on Citings, setting Citing Code, Severity Level, and explanatory comments.
+Review Conclusion: Underwriter logs notification letters (Letters 1-14) on Review Info, enters Review Comment and Final Comment, and submits the audit for manager approval.
+6. Knowledge Transfer (KT) Handover Checklist & Support Guide
+6.1 Daily Operations & Triage
+ Batch File Requests: Monitor File Request Batch Details daily for stalled batches in Submitted status.
+ Audit Exception Clearing: Ensure underwriters clear PHH Resolved? checkboxes when borrower rebuttals satisfy open citings.
+ Data Integrity Safeguard: Remind all operational personnel never to click browser back buttons; enforce on-screen APEX navigation.
+6.2 Maintenance & Troubleshooting
+ Lookup Table Updates: When new loan programs or investor codes are introduced, use Administration > Manage Drop Down List to add lookup values without code deployments.
+ User Provisioning: New analysts and underwriters must be assigned appropriate business unit roles in Manage Users.
+ Audit Trail Inquiries: For regulatory examinations or internal audits, query Recourse Operations History (Page 502) or Investor Details History (Page 8) by application number or date range.
