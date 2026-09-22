@@ -1,0 +1,51 @@
+SELECT 
+    -- Page Details
+    p.application_id,
+    p.page_id,
+    p.page_name,
+    
+    -- Region Details
+    r.display_sequence AS region_sequence,
+    r.region_name,
+    r.source_type AS region_type,
+    
+    -- Button Details
+    b.button_name,
+   
+    b.button_action,
+    b.region AS button_assigned_to_region,
+    
+    -- Process Details
+    pr.ATTRIBUTES,
+    pr.PROCESS_NAME,
+    pr.PROCESS_TYPE,
+    pr.PROCESS_POINT_CODE AS process_trigger_button
+
+FROM apex_application_pages p
+
+-- Join Regions on the Page
+LEFT JOIN apex_application_page_regions r 
+    ON p.application_id = r.application_id 
+   AND p.page_id = r.page_id
+
+-- Join Buttons on the Page (and map to Regions if names align)
+LEFT JOIN apex_application_page_buttons b 
+    ON p.application_id = b.application_id 
+   AND p.page_id = b.page_id
+   AND (r.region_name = b.region OR b.region IS NULL)
+
+-- Join Processes on the Page (and map to Buttons if conditional)
+LEFT JOIN apex_application_page_proc pr 
+    ON p.application_id = pr.application_id 
+   AND p.page_id = pr.page_id
+   AND (b.button_name = pr.when_button_pressed OR pr.when_button_pressed IS NULL)
+
+WHERE p.application_id = '122'
+ -- AND p.page_id = :YOUR_PAGE_ID
+
+ORDER BY 
+    r.display_sequence NULLS FIRST, 
+    b.button_name NULLS FIRST;
+    
+
+select * from apex_application_page_buttons
